@@ -6,10 +6,8 @@ import eventTarget from "../Manager/EventManager";
 export class RequireController extends Component {
   start() {
     this.node.on(Node.EventType.TOUCH_START, () => {
-      console.log("click require");
-      eventTarget.emit("actionChopWood");
+      eventTarget.emit("moveToTree");
+      this.node.active = false
     });
   }
-
-  update(deltaTime: number) {}
 }
