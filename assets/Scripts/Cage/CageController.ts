@@ -36,13 +36,13 @@ export class CageController extends Component {
     this.scheduleOnce(() => {
       eventTarget.emit("onUpgradeGarden");
       eventTarget.emit("onGetCageResource", type);
-      this.pig.active = false;
-      this.chicken.active = false;
-      if (type === "pig") {
-        this.meatResource.active = true;
-      } else if (type === "chicken") {
-        this.eggResource.active = true;
-      }
+      // this.pig.active = false;
+      // this.chicken.active = false;
+      // if (type === "pig") {
+      //   this.meatResource.active = true;
+      // } else if (type === "chicken") {
+      //   this.eggResource.active = true;
+      // }
     }, 1);
   }
 
@@ -60,6 +60,8 @@ export class CageController extends Component {
       this.eggResource.active = false;
     });
     eventTarget.on("onClickBasket", () => {
+      this.pig.active = false
+      this.chicken.active = false
       this.meatResource.active = false;
       this.eggResource.active = false;
     });

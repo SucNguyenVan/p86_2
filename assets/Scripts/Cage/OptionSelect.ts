@@ -12,6 +12,9 @@ export class OptionSelect extends Component {
   select(type: string) {
     this.node.active = false;
     eventTarget.emit("setTypeLivestock", type);
+    this.scheduleOnce(() => {
+      eventTarget.emit("turnOnBasket");
+    }, 1);
   }
   setUp() {
     this.pigSelect.on(

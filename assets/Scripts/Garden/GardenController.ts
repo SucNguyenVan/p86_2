@@ -43,9 +43,9 @@ export class GardenController extends Component {
         this.gardenBase.active =false
         this.gardenCorn.active = true
     }
-    this.scheduleOnce(()=>{
-        eventTarget.emit("turnOnBasket")
-    }, 0.2)
+    // this.scheduleOnce(()=>{
+    //     eventTarget.emit("turnOnBasket")
+    // }, 0.2)
   }
   doneHarvesting(){
     this.gardenBase.active = true
@@ -58,8 +58,9 @@ export class GardenController extends Component {
     });
     eventTarget.on("setTypeTree", (type)=>{
         this.typeTree = type
+        this.upgradeGarden()
     })
-    eventTarget.on("onUpgradeGarden", this.upgradeGarden, this)
+    // eventTarget.on("onUpgradeGarden", this.upgradeGarden, this)
     eventTarget.on("doneHarvesting", this.doneHarvesting, this)
     this.setUp();
   }
@@ -67,6 +68,6 @@ export class GardenController extends Component {
   protected onDestroy(): void {
     eventTarget.off("doneUpgradeHouse");
     eventTarget.off("setTypeTree")
-    eventTarget.off("onUpgradeGarden")
+    // eventTarget.off("onUpgradeGarden")
   }
 }
