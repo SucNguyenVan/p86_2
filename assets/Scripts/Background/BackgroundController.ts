@@ -45,24 +45,24 @@ export class BackgroundController extends Component {
   }
 
   nvcMoveTo(targetPosition: Vec3) {
-    const offset = 80; // Khoảng cách từ `tree`
-    const nvcPos = this.nvc.getPosition();
-    const direction = targetPosition
-      .clone()
-      .subtract(nvcPos)
-      .normalize()
-      .multiplyScalar(offset);
-    const newPosition = targetPosition.clone().subtract(direction);
-    this.playNVCAnimation("walk");
-    tween(this.nvc)
-      .to(3, { position: newPosition })
-      .call(() => {
-        this.playNVCAnimation("chop_loop");
-        this.scheduleOnce(() => {
-          this.doneChopWood();
-        }, 2); // Thay đổi thời gian nếu cần
-      })
-      .start();
+    // const offset = 80; // Khoảng cách từ `tree`
+    // const nvcPos = this.nvc.getPosition();
+    // const direction = targetPosition
+    //   .clone()
+    //   .subtract(nvcPos)
+    //   .normalize()
+    //   .multiplyScalar(offset);
+    // const newPosition = targetPosition.clone().subtract(direction);
+    // this.playNVCAnimation("walk");
+    // tween(this.nvc)
+    //   .to(3, { position: newPosition })
+    //   .call(() => {
+    //     this.playNVCAnimation("chop_loop");
+    //     this.scheduleOnce(() => {
+    //       this.doneChopWood();
+    //     }, 2); // Thay đổi thời gian nếu cần
+    //   })
+    //   .start();
   }
 
   actionGetResource(type = "", startPos: Vec3) {
@@ -91,7 +91,8 @@ export class BackgroundController extends Component {
         eventTarget.emit("doneHarvesting")
         this.scheduleOnce(()=>{
           this.download.active = true
-          this.download.getComponent(UITransform).priority = 10
+          this.download.setSiblingIndex(this.node.children.length - 1)
+          // this.download.getComponent(UITransform).priority = 10
         }, 1)
       });
 
@@ -125,6 +126,12 @@ export class BackgroundController extends Component {
     // }
   }
 
+  doneChopWood() {
+    this.playNVCAnimation("idle");
+    this.tree.active = false;
+    eventTarget.emit("onUpgradeMainHouse");
+  }
+
   protected onLoad(): void {
     this.download.active = false;
     this.basket.active = false;
@@ -132,20 +139,17 @@ export class BackgroundController extends Component {
     this.meatResource.active = false
     this.eggResource.active = false
     eventTarget.on("moveToTree", () => {
-      this.nvcMoveTo(this.tree.position);
+      // this.nvcMoveTo(this.tree.position);
+      eventTarget.emit("nvcMoveTo", this.tree.getWorldPosition(), "chop_loop", 2)
     });
     eventTarget.on("turnOnBasket", () => {
       this.basket.active = true;
     });
     eventTarget.on("onGetCageResource", this.onGetCageResource, this)
     this.basket.on(Node.EventType.TOUCH_START, this.onClickBasket, this);
+    eventTarget.on("nvcMoveEnd", this.doneChopWood, this)
   }
 
-  doneChopWood() {
-    this.playNVCAnimation("idle");
-    this.tree.active = false;
-    eventTarget.emit("onUpgradeMainHouse");
-  }
   start() {
     this.nvc.getComponent(UITransform).priority = 10;
   }
