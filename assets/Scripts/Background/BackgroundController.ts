@@ -35,6 +35,9 @@ export class BackgroundController extends Component {
   duration = 1;
   livestockType = ""
 
+  mindworks = true
+  vungle = false
+
   playNVCAnimation(animationName: string) {
     const skeleton = this.nvc.getComponent(sp.Skeleton);
     if (skeleton && animationName) {
@@ -152,11 +155,23 @@ export class BackgroundController extends Component {
 
   start() {
     this.nvc.getComponent(UITransform).priority = 10;
+    if(this.mindworks){
+      window?.gameReady && window?.gameReady()
+    }
   }
 
   protected onDestroy(): void {
     eventTarget.off("moveToTree");
     eventTarget.off("turnOnBasket");
     eventTarget.off("onGetCageResource")
+  }
+
+  EventNetWork(){
+    if(this.mindworks){
+      window?.gameEnd && window?.gameEnd()
+    }
+    if(this.vungle){
+      parent.postMessage("complete", '*')
+    }
   }
 }
